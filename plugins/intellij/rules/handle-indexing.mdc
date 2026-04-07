@@ -1,0 +1,26 @@
+---
+description: Check IDE index readiness before batch code intelligence operations. When IntelliJ is in "dumb mode" (indexing), most Index server tools will fail or return incomplete results.
+alwaysApply: true
+---
+
+# Handle IDE indexing ("dumb mode")
+
+IntelliJ's code intelligence tools depend on a background index. During indexing (after project open, dependency changes, or large VCS operations), the IDE enters "dumb mode" where most Index tools return errors or incomplete results.
+
+## When tools fail unexpectedly
+
+Call `ide_index_status` (Index server):
+- `isDumbMode: true` → indexing in progress, wait and retry
+- `isDumbMode: false` → index is ready, the failure has another cause
+
+## When to proactively check
+
+- At the start of a batch of Index operations (find class, find references, type hierarchy, etc.)
+- After `ide_sync_files` on many files
+- After opening a project or switching branches
+
+## Recovery
+
+If `isDumbMode` is true, wait a few seconds and re-check. Do not retry Index tools repeatedly during dumb mode — they will continue to return stale results until indexing completes.
+
+GeneralIDE tools (`build_project`, `open_file_in_editor`, `execute_terminal_command`) are generally unaffected by dumb mode.

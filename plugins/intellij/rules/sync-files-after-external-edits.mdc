@@ -1,0 +1,21 @@
+---
+description: Call ide_sync_files after creating or modifying files outside IntelliJ (e.g. from Cursor) so the IDE index stays current and subsequent tool calls return correct results.
+alwaysApply: true
+---
+
+# Sync files after external edits
+
+When files are created, modified, or deleted outside IntelliJ (by Cursor, git, scripts, etc.), the IDE's virtual file system and PSI cache become stale. This causes Index and GeneralIDE tools to miss new files or return outdated results.
+
+**After modifying files externally**, call `ide_sync_files` (Index server) before using any other IDE tool on those files:
+
+```json
+{"paths": ["src/main/java/com/example/NewFile.java", "src/main/java/com/example/Modified.java"]}
+```
+
+Omit `paths` to sync the entire project (slower, use only when many files changed).
+
+Common triggers:
+- After creating new files via Cursor
+- After `git checkout`, `git pull`, or `git stash pop`
+- After running code generators or build scripts that produce source files

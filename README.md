@@ -1,42 +1,76 @@
-# Cursor Trial Plugins
+# Intellij Cursor Plugin 
 
-An example Team Marketplace that includes a set of starter plugins for Cursor.
+### Integration to use the following Intellij Marketplace Plugins
+- Debugger MCP Server
+- IDE Index MCP Server
+- MCP Server
 
-## Included plugins
 
-This repo currently ships five grouped plugins:
+### Tools Overview
+Debug Tools
+list_debug_sessions
+stop_debug_session
+execute_run_configuration
+start_debug_session
+get_source_context
+step_into
+select_stack_frame
+step_out
+list_breakpoints
+step_over
+get_stack_trace
+run_to_line
+remove_breakpoint
+get_debug_session_status
+get_variables
+list_run_configurations
+wait_for_pause
+list_threads
+resume_execution
+pause_execution
+evaluate_expression
+set_breakpoint
+set_variable
 
-- **git-workflows**: commit, PR, CI, merge conflict, and branch validation workflows
-- **documentation**: README updates, weekly review summaries, markdown naming, and docs writing
-- **pm**: Ticket-oriented PM workflows with MCP config, ticket writing, and board summarization
-- **design**: wireframes, component design support, and mockup workflow
-- **testing-reliability**: Datadog dashboards, performance optimization, and testing agents
+Index Tools
+ide_find_references
+ide_type_hierarchy
+ide_index_status
+ide_sync_files
+ide_find_super_methods
+ide_refactor_rename
+ide_call_hierarchy
+ide_find_file
+ide_search_text
+ide_move_file
+ide_diagnostics
+ide_find_class
+ide_find_definition
+ide_refactor_safe_delete
+ide_find_implementations
 
-## Repository structure
-
-- `.cursor-plugin/marketplace.json`: marketplace manifest and plugin registry
-- `plugins/<plugin-name>/.cursor-plugin/plugin.json`: per-plugin metadata
-- `plugins/<plugin-name>/rules`: rule files (`.mdc`)
-- `plugins/<plugin-name>/skills`: skill folders with `SKILL.md`
-- `plugins/<plugin-name>/agents`: subagent definitions
-- `plugins/<plugin-name>/mcp.json`: MCP server configuration for each plugin
-
-## Validate changes
-
-Run:
-
-```bash
-node scripts/validate-template.mjs
-```
-
-This checks marketplace paths, plugin manifests, and required frontmatter in rule/skill/agent/command files.
-
-## Submission checklist
-
-- Each plugin has a valid `.cursor-plugin/plugin.json`
-- Plugin names are unique, lowercase, and kebab-case
-- `.cursor-plugin/marketplace.json` entries map to real plugin folders
-- Required frontmatter metadata exists in plugin content files
-- Logo paths resolve correctly from each plugin manifest
-- `node scripts/validate-template.mjs` passes
+General IDE Tools
+permission_prompt
+runNotebookCell
+get_repositories
+execute_terminal_command
+rename_refactoring
+get_symbol_info
+search_in_files_by_text
+search_in_files_by_regex
+replace_text_in_file
+get_file_text_by_path
+reformat_file
+open_file_in_editor
+list_directory_tree
+get_all_open_file_paths
+find_files_by_name_keyword
+find_files_by_glob
+create_new_file
+get_project_modules
+get_project_dependencies
+get_file_problems
+build_project
+get_run_configurations
+execute_run_configuration
 

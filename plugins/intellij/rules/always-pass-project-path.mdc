@@ -1,0 +1,13 @@
+---
+description: Always include the project path parameter when calling IntelliJ MCP tools to avoid ambiguity across multi-project workspaces.
+alwaysApply: true
+---
+
+# Always pass project path
+
+Every IntelliJ MCP tool accepts a project path parameter. Always include it when known.
+
+- **Debugger & Index servers**: use `project_path` (snake_case), expects an absolute path.
+- **GeneralIDE server**: use `projectPath` (camelCase), accepts absolute path or current working directory.
+
+If you don't know the project path, ask the user or use `get_repositories` (GeneralIDE) to discover it.

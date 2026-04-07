@@ -1,0 +1,16 @@
+---
+description: Build the project or check file problems after making code edits to verify changes compile correctly.
+alwaysApply: true
+---
+
+# Validate after code edits
+
+After making code changes, always verify they compile:
+
+1. **Quick check** — `get_file_problems` (GeneralIDE) on the edited file for instant IDE inspection results.
+2. **Full check** — `build_project` (GeneralIDE) for compilation across the whole project.
+3. **Targeted check** — `build_project` with `filesToRebuild` listing only the changed files for a faster partial build.
+
+If the build fails, inspect the `problems` array: each entry contains `file`, `line`, `column`, and `message`. Fix errors and rebuild.
+
+After refactoring operations (`ide_refactor_rename`, `ide_move_file`, `ide_refactor_safe_delete`), always run a build to confirm no references were missed.

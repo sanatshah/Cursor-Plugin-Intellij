@@ -1,0 +1,20 @@
+---
+description: Prefer IntelliJ MCP tools over shell commands for file search, text search, code navigation, and refactoring since they use the IDE index and are faster.
+alwaysApply: true
+---
+
+# Prefer IDE tools over shell commands
+
+The IntelliJ MCP servers expose indexed, fast alternatives to common shell operations. Always prefer them:
+
+| Task | Use this | Not this |
+|------|----------|----------|
+| Find files by name | `ide_find_file` (Index) or `find_files_by_name_keyword` (GeneralIDE) | `find`, `fd`, `ls -R` |
+| Search text in files | `ide_search_text` (Index) or `search_in_files_by_text` (GeneralIDE) | `grep`, `rg`, `ag` |
+| Search with regex | `search_in_files_by_regex` (GeneralIDE) | `grep -E`, `rg` |
+| Read file contents | `get_file_text_by_path` (GeneralIDE) | `cat`, `head`, `tail` |
+| Find class by name | `ide_find_class` (Index) | manual grep for `class` keyword |
+| Rename symbol | `ide_refactor_rename` (Index) or `rename_refactoring` (GeneralIDE) | `sed`, find-and-replace |
+| Check for errors | `get_file_problems` (GeneralIDE) or `ide_diagnostics` (Index) | manual compilation |
+
+IDE-indexed lookups are O(1) vs O(n) file scanning, especially in large projects.

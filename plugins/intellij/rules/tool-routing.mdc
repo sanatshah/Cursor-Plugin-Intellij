@@ -1,0 +1,48 @@
+---
+description: Guide for choosing the correct IntelliJ MCP server and tool when multiple servers expose overlapping capabilities.
+alwaysApply: true
+---
+
+# Tool routing across MCP servers
+
+Three servers exist with some overlapping tools. Use this guide to pick the right one.
+
+## File search
+
+| Tool | Server | Best for |
+|------|--------|----------|
+| `ide_find_file` | Index | camelCase/wildcard matching, pagination, library search |
+| `find_files_by_name_keyword` | GeneralIDE | simple substring match by name, fastest |
+| `find_files_by_glob` | GeneralIDE | glob patterns on full paths |
+
+## Text search
+
+| Tool | Server | Best for |
+|------|--------|----------|
+| `ide_search_text` | Index | exact word via pre-built word index, filter by code/comments/strings |
+| `search_in_files_by_text` | GeneralIDE | substring search with directory/fileMask scope |
+| `search_in_files_by_regex` | GeneralIDE | regex patterns |
+
+## Rename
+
+| Tool | Server | Best for |
+|------|--------|----------|
+| `ide_refactor_rename` | Index | position-based (file+line+column), fine-grained override/related strategies, file rename |
+| `rename_refactoring` | GeneralIDE | name-based (symbolName), simpler when position is unknown |
+
+## Run configuration
+
+| Tool | Server | Best for |
+|------|--------|----------|
+| `get_run_configurations` | GeneralIDE | list configs with command line, env vars, working dir details |
+| `list_run_configurations` | Debugger | list configs (lighter, same names) |
+| `execute_run_configuration` | GeneralIDE | run and capture output |
+| `start_debug_session` | Debugger | run with breakpoints and stepping |
+
+## Diagnostics
+
+| Tool | Server | Best for |
+|------|--------|----------|
+| `get_file_problems` | GeneralIDE | single-file inspection (errors + warnings) |
+| `ide_diagnostics` | Index | combined file analysis + build errors + test results, quick-fix intentions |
+| `build_project` | GeneralIDE | full or partial compilation with error output |

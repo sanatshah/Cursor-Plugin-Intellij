@@ -1,0 +1,26 @@
+---
+description: Follow correct patterns when using the IntelliJ Debugger MCP server, including wait-for-pause after execution control and session cleanup.
+alwaysApply: false
+---
+
+# Debug session best practices
+
+## Use wait_for_pause instead of polling
+
+After any execution control call (`start_debug_session`, `resume_execution`, `step_over`, `step_into`, `step_out`, `run_to_line`), call `wait_for_pause` with an appropriate `timeout` (seconds) to block until execution stops. This returns the full session status (location, variables, stack) and eliminates manual polling loops.
+
+## Always clean up sessions
+
+Call `stop_debug_session` when done debugging. Abandoned sessions keep the target process running and consume IDE resources.
+
+## Discover before starting
+
+Call `list_run_configurations` before `start_debug_session` to get the exact `configuration_name`. Typos in the name will fail silently.
+
+## Breakpoint file paths must be absolute
+
+`set_breakpoint` and `run_to_line` require `file_path` as an **absolute** path (unlike most Index/GeneralIDE tools which take relative paths).
+
+## Expression evaluation language limits
+
+`evaluate_expression` and `set_variable` have full support in Java, Kotlin, Python, and JavaScript. For Rust, C++, and Go (LLDB/GDB), method calls may not work — variable inspection is reliable but complex expressions are not.
