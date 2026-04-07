@@ -1,0 +1,17 @@
+{
+    "mcpServers": {
+      "Debugger": {
+        "type": "http",
+        "url": "http://127.0.0.1:29190/debugger-mcp/streamable-http"
+      },
+      "GeneralIDE": {
+        "type": "http",
+        "url": "http://127.0.0.1:64343/sse"
+      },
+      "Index": {
+        "type": "http",
+        "url": "http://127.0.0.1:29170/index-mcp/streamable-http"
+      }
+    }
+  }
+  

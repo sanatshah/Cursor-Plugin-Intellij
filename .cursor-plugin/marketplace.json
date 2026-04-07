@@ -11,19 +11,9 @@
   },
   "plugins": [
     {
-      "name": "general",
-      "source": "general",
-      "description": "General capabilities using the General MCP Server Intellij Plugin."
-    },
-    {
-      "name": "index",
-      "source": "index",
-      "description": "Index capabilities using the Index MCP Server Intellij Plugin."
-    },
-    {
-      "name": "debugger",
-      "source": "debugger",
-      "description": "Debug capabilities using the Debugger MCP Server Intellij Plugin."
+      "name": "intellij",
+      "source": "intellij",
+      "description": "Intellij Integration capabilities using various Intellij MCP Plugins."
     }
   ]
 }

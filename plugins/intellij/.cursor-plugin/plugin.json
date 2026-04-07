@@ -1,0 +1,13 @@
+{
+  "name": "intellij",
+  "displayName": "Intellij Integration",
+  "version": "0.1.0",
+  "description": "Intellij Integration capabilities using various Intellij MCP Plugins.",
+  "author": {
+    "name": "Cursor Team",
+    "email": "hi@cursor.com"
+  },
+  "license": "MIT",
+  "keywords": ["cursor", "plugin", "intellij", "mcp", "debug", "index", "general"],
+  "logo": "assets/testing.png"
+}
