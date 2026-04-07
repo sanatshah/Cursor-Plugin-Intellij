@@ -1,6 +1,6 @@
 {
     "mcpServers": {
-      "indexMcpServer": {
+      "Index": {
         "type": "http",
         "url": "http://127.0.0.1:29170/index-mcp/streamable-http"
       }
