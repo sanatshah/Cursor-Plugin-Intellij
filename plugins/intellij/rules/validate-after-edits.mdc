@@ -11,6 +11,18 @@ After making code changes, always verify they compile:
 2. **Full check** — `build_project` (GeneralIDE) for compilation across the whole project.
 3. **Targeted check** — `build_project` with `filesToRebuild` listing only the changed files for a faster partial build.
 
-If the build fails, inspect the `problems` array: each entry contains `file`, `line`, `column`, and `message`. Fix errors and rebuild.
+## When the build fails — use MCP output; do not guess
+
+Rely on **GeneralIDE** (and Index when useful), not ad-hoc shell compiles, as the source of truth for what broke.
+
+1. **Read the full `build_project` response** — never “fix” compile errors without this payload.
+   - **`isSuccess: false`** → treat as a failed build even if `problems` looks short; the tool may still list every diagnostic it captured.
+   - **`timedOut: true`** → results may be **partial**; increase `timeout`, rerun `build_project`, or narrow with `filesToRebuild` before concluding the project is clean.
+   - **`problems`** — for each entry use **`message`**, and when present **`description`**, **`file`**, **`line`**, **`column`**, **`kind`**, **`group`**. Fix in that order (file/line/column first when available), then rebuild via **`build_project`** again.
+2. **Supplement with more MCP diagnostics** when `problems` is empty or unclear:
+   - **`get_file_problems`** on the files you edited (and on paths named in `problems`).
+   - **`ide_diagnostics`** (Index) for broader project/build/test context and quick-fix hints.
+3. **Iterate** — apply fixes, call **`build_project`** again, and repeat until **`isSuccess`** is true (and **`timedOut`** is not true on the final run unless you accept partial verification).
+4. **Run configurations / tests** — if compilation is fixed but **`execute_run_configuration`** fails, use its returned **`output`** (and **`exitCode`**, **`timedOut`**) to drive fixes; prefer that captured log over rerunning the same command in the terminal unless MCP is unavailable.
 
 After refactoring operations (`ide_refactor_rename`, `ide_move_file`, `ide_refactor_safe_delete`), always run a build to confirm no references were missed.

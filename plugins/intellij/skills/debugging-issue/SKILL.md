@@ -19,6 +19,8 @@ Call `list_run_configurations` (MCP server: `plugin-intellij-Debugger`) to find 
 
 Call `set_breakpoint` with `file_path` (absolute) and `line` (1-based).
 
+**IntelliJ must accept the file path** — use project sources under the repo (e.g. `src/main/java/...`). Do not point at JDK or dependency sources copied to `/tmp` or other ad-hoc paths; breakpoint creation usually fails because the debugger does not map those files to loaded classes. For JDK entrypoints (`Thread.start`, etc.), the MCP cannot create **Java method breakpoints**; tell the user to add those in IntelliJ (**Run → View Breakpoints… → + → Java Method Breakpoint**). Prefer a line in **your code** at the call site (e.g. where an `Executor` submits work) when that matches the user’s intent.
+
 Optional parameters:
 - `condition`: boolean expression, e.g. `"count > 10"`
 - `log_message`: tracepoint with `{expression}` interpolation, e.g. `"x={x}, y={y}"`

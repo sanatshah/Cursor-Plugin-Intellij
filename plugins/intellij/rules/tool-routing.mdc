@@ -46,3 +46,8 @@ Three servers exist with some overlapping tools. Use this guide to pick the righ
 | `get_file_problems` | GeneralIDE | single-file inspection (errors + warnings) |
 | `ide_diagnostics` | Index | combined file analysis + build errors + test results, quick-fix intentions |
 | `build_project` | GeneralIDE | full or partial compilation with error output |
+
+### After a failed build or failed run configuration
+
+- **`build_project`** — use the returned **`problems`** (and **`timedOut`**) as the primary signal; add **`get_file_problems`** / **`ide_diagnostics`** before changing code if diagnostics are missing or ambiguous.
+- **`execute_run_configuration`** — use **`output`**, **`exitCode`**, and **`timedOut`** to interpret test/app failures; avoid guessing from memory when the tool already returned a log.

@@ -21,6 +21,10 @@ Call `list_run_configurations` before `start_debug_session` to get the exact `co
 
 `set_breakpoint` and `run_to_line` require `file_path` as an **absolute** path (unlike most Index/GeneralIDE tools which take relative paths).
 
+## Breakpoint paths must be IntelliJ-debuggable
+
+Use files under the **project** (or otherwise on SDK/source roots the IDE already attaches). Paths to extracted JDK sources in `/tmp` (or other copies outside the configured SDK) typically **fail** to verify. For line breakpoints, prefer project `src/...`. For **method** breakpoints on JDK classes, use IntelliJ’s UI — the Debugger MCP only supports **line** breakpoints in accepted files.
+
 ## Expression evaluation language limits
 
 `evaluate_expression` and `set_variable` have full support in Java, Kotlin, Python, and JavaScript. For Rust, C++, and Go (LLDB/GDB), method calls may not work — variable inspection is reliable but complex expressions are not.

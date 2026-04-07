@@ -35,7 +35,7 @@ Always pass `projectPath` when you know it.
 
 Returns:
 - `isSuccess`: whether the build succeeded
-- `problems`: array of errors/warnings, each with `message`, `kind`, `file`, `line`, `column`
+- `problems`: array of errors/warnings, each with `message`, `kind`, `group`, `description`, `file`, `line`, `column`
 - `timedOut`: whether the build exceeded the timeout
 
 ## Check file problems — `get_file_problems`
@@ -58,9 +58,16 @@ Use `ide_diagnostics` (Index server: `plugin-intellij-Index`) for broader projec
 
 ### After making edits
 1. Call `build_project` (incremental)
-2. If `isSuccess` is false, review the `problems` array
-3. Fix errors at the reported file/line/column locations
-4. Rebuild and repeat until clean
+2. If `isSuccess` is false, **read the full MCP response** and drive fixes from it (do not infer errors from generic knowledge)
+3. For each `problems` entry, use `file` / `line` / `column` when present, then `message` and `description`; use `kind` / `group` for filtering noisy warnings
+4. If `timedOut` is true, treat results as partial — increase `timeout`, rerun, or use `filesToRebuild` for a faster pass
+5. If `problems` is empty but the build failed, call `get_file_problems` on edited files and/or `ide_diagnostics` (Index) before editing
+6. Rebuild with `build_project` and repeat until `isSuccess` is true
+
+### When `build_project` fails — checklist
+1. Copy or mentally map every `problems` item to a concrete code location.
+2. Fix and run `build_project` again (same `projectPath`; use `filesToRebuild` when iterating on a small set).
+3. Only fall back to terminal Maven/Gradle if GeneralIDE MCP is unavailable or the user asked for it — even then, prefer fixing against the same error text the tool or CI surfaced.
 
 ### Targeted validation
 1. Call `build_project` with `filesToRebuild` listing only changed files — faster than full build

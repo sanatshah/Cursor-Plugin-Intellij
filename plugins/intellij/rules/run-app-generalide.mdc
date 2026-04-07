@@ -1,0 +1,34 @@
+---
+description: Run the javachat app only via GeneralIDE MCP run configurations, not raw Maven/shell.
+alwaysApply: true
+---
+
+# Run the app with GeneralIDE run configurations
+
+When the user asks to **run**, **start**, or **launch** the application (Spring Boot server, desktop UI, or "the app" without naming JUnit only), **do not** use the terminal for `mvn spring-boot:run`, `./mvnw`, `java -jar`, or ad-hoc scripts unless GeneralIDE MCP is unavailable or the user explicitly requests a shell run.
+
+## Required workflow
+
+1. Pass **`projectPath`** (camelCase) on every GeneralIDE call — absolute path to this repo root; if unknown, use `get_repositories` (GeneralIDE) or the workspace path from context (`always-pass-project-path`).
+2. Optionally call **`build_project`** first so compile errors surface in the IDE.
+3. Call **`get_run_configurations`** and **filter** to the configs you will run:
+   - **Skip** entries whose `description` is exactly `JUnit test configuration` (or clearly test-only), **unless** the user explicitly asked to run tests.
+   - **Keep** Maven / Gradle / Spring Boot / Application-style configs (e.g. `javachat [spring-boot:run...]`, `javachat ui`).
+4. **Stop existing runs** before launching new ones:
+   - Call Debugger **`list_debug_sessions`** with `project_path`. For each active session, call **`stop_debug_session`** with its `session_id` and `project_path`.
+   - Call GeneralIDE **`execute_terminal_command`** to kill processes on app ports (e.g. `lsof -ti:8080 | xargs kill -9 2>/dev/null; exit 0`) with `executeInShell: true`, `reuseExistingTerminalWindow: true`, `timeout: 5000`, and `projectPath`. Errors here are fine — continue regardless.
+5. **One subagent = one run configuration.** Do **not** pack multiple configs into a single subagent. For a generic "run the app" request, **do not** call **`execute_run_configuration`** in the parent turn; spawn **`Task`** subagents instead:
+   - For **each** filtered configuration, launch **`Task`** once with `subagent_type`: **`generalPurpose`**, `model`: **`fast`** (unless analysis is very heavy).
+   - Each subagent's prompt must name the **exact** `configurationName` string and **absolute** `projectPath`, and instruct it to run **only** that configuration via **`execute_run_configuration`** (optional **`get_run_configurations`** first to confirm the name). Use **600000** ms timeout for heavy Maven/Gradle builds and **180000** ms or higher for long-lived servers (e.g. `spring-boot:run`). If `timedOut` is true, the subagent should report that startup may have been cut off. Optional: `maxLinesCount` (e.g. 500), `truncateMode` `END`.
+   - If **multiple** configurations apply, launch **multiple** **`Task`** calls in **parallel** (same user message / turn) so each run is isolated in its own subagent. Merge subagent results when replying (exit code, timedOut, brief error lines).
+   - Parallel runs may contend for **ports** or **IDE locks**; if the user hits failures, say that running configs one at a time or in IntelliJ manually may be needed.
+
+6. If the user names **one** configuration or asks to **debug**, you may still use **one** subagent for that single run, or call **`execute_run_configuration`** / Debugger **`start_debug_session`** directly in the parent turn. Still stop existing runs first (step 4).
+
+## Fallback
+
+If `get_run_configurations` returns **no** app-style entries or GeneralIDE errors, tell the user and only then offer a terminal command as a fallback.
+
+## Reference
+
+The [build-and-run](../skills/build-and-run/SKILL.md) skill contains the **single-configuration** subagent prompt template and the full [Stopping existing runs](../skills/build-and-run/SKILL.md#stopping-existing-runs) procedure; keep this rule and that skill aligned when changing batch behavior.

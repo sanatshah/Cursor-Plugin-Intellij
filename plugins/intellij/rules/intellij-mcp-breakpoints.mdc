@@ -1,0 +1,42 @@
+---
+description: Use IntelliJ-accepted on-disk line breakpoints via Debugger MCP; avoid ad-hoc JDK paths.
+alwaysApply: true
+---
+
+# IntelliJ Debugger MCP — breakpoints
+
+When the user asks to **add a breakpoint** and you use `set_breakpoint` (Debugger MCP):
+
+## Use line breakpoints in files IntelliJ accepts
+
+- Prefer **project source files** under the repo (e.g. `src/main/java/...`). Use an **absolute** `file_path`.
+- Pick lines at **call sites** that trigger the behavior (e.g. `executor.execute(...)`, service entrypoints) when the goal is “when X runs” rather than stopping inside the JDK.
+
+## Do not use ad-hoc or external copies of library/JDK sources
+
+- Extracting `Thread.java` or other API sources to `/tmp` or arbitrary folders usually **fails** (`Failed to create breakpoint`) because those paths are not the SDK/source roots IntelliJ binds to the running debugger.
+- Do not rely on MCP to set breakpoints on random on-disk copies of dependencies.
+
+## JDK / method-level breakpoints
+
+- `set_breakpoint` is **line-only** in a file; there is **no** MCP method-breakpoint API.
+- For JVM internals (e.g. `Thread.start()`, `VirtualThread.start()`), tell the user to add a **Java Method Breakpoint** in IntelliJ: **Run → View Breakpoints… → + → Java Method Breakpoint**.
+
+## Open the file after adding a breakpoint
+
+Whenever `set_breakpoint` **succeeds** (breakpoint verified or accepted by the IDE), **immediately** open that source file in IntelliJ so the user sees the line in context:
+
+1. Call **`open_file_in_editor`** (GeneralIDE MCP) with:
+   - **`filePath`**: the **same absolute path** passed to `set_breakpoint` as `file_path`
+   - **`projectPath`**: absolute repo root when known (see [always-pass-project-path](always-pass-project-path.mdc))
+2. Skip this if `set_breakpoint` failed or the path is not under project sources (e.g. user cancelled, wrong path).
+
+Do **not** rely on the user to navigate manually after you add breakpoints via MCP.
+
+## Summary
+
+| Goal                         | MCP approach                                                      |
+|-----------------------------|-------------------------------------------------------------------|
+| Stop in app logic           | `set_breakpoint` on a line in project `src/...`                   |
+| After setting a breakpoint | `open_file_in_editor` with the same absolute `filePath`          |
+| Stop deep in JDK / runtime  | Manual Java Method Breakpoint in IntelliJ UI                      |

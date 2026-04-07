@@ -1,0 +1,46 @@
+---
+description: After finishing a request that changed project files, sync IntelliJ, open touched files, build via GeneralIDE, and run app-style run configurations (not shell Maven).
+alwaysApply: true
+---
+
+# Post-request IntelliJ workflow (sync, open, build, run)
+
+When you **create, modify, or delete** files in this repo using Cursor (Write, StrReplace, shell, etc.), do the following **only after** you have **fully completed** the user's request for this turn — as a **final step** before or while wrapping your reply (after any fixes, validation, or tests you were asked to run).
+
+## When to run this workflow
+
+- **Run it only if** the turn produced **real project filesystem changes** that are not confined to noise paths (see below). If the request was read-only (questions, exploration, no saves), **skip** this entire workflow.
+- **Do not** sync/open/build/run mid-task for every intermediate save unless the user explicitly asked for that.
+
+**Skip build and run** (you may still sync if you touched paths the Index should see) when changes are **only** under e.g. `target/**`, `**/node_modules/**`, `.git/**`, or binary/noise artifacts you did not intentionally edit for the task. **Skip opening** those paths in the editor.
+
+Track which paths you changed (dedupe). If a path was only deleted, include it in sync if needed; do not call `open_file_in_editor` for removed-only paths.
+
+## Order of operations (end of turn)
+
+1. **`ide_sync_files`** (Index MCP) for the paths you touched — pass a `paths` array when the set is manageable; omit `paths` only when many files changed across the tree. See [sync-files-after-external-edits](sync-files-after-external-edits.mdc).
+
+2. **`open_file_in_editor`** (GeneralIDE MCP) once per **still-existing** file you added or edited that should appear in the editor — typically **source, resource, and config** files (not build outputs). Always pass **`projectPath`** (camelCase) — absolute repo root when known.
+
+3. **`build_project`** (GeneralIDE MCP) with the same **`projectPath`**. If **`isSuccess`** is false or **`timedOut`** is true, read the full tool response and use **`problems`** (plus **`get_file_problems`** / **`ide_diagnostics`** as needed) to fix and rebuild — see [validate-after-edits](validate-after-edits.mdc). Do **not** launch app run configurations while the project fails to compile unless the user explicitly asked to try.
+
+4. **Stop existing runs** before launching new ones:
+   - Call Debugger **`list_debug_sessions`** with `project_path`. For each active session, call **`stop_debug_session`** with its `session_id` and `project_path`.
+   - Call GeneralIDE **`execute_terminal_command`** to kill processes on app ports (e.g. `lsof -ti:8080 | xargs kill -9 2>/dev/null; exit 0`) with `executeInShell: true`, `reuseExistingTerminalWindow: true`, `timeout: 5000`, and `projectPath`. Errors here are fine — continue regardless.
+
+5. **Run the app** per [run-app-generalide](run-app-generalide.mdc) and [build-and-run](../skills/build-and-run/SKILL.md):
+   - Call **`get_run_configurations`** with **`projectPath`**.
+   - **Filter**: **skip** entries whose `description` is exactly `JUnit test configuration` (or clearly test-only) unless the user asked to run tests; **keep** Maven / Gradle / Spring Boot / Application-style configs.
+   - For **each** remaining configuration, launch **`Task`** with `subagent_type` **`generalPurpose`**, `model` **`fast`**, using the single-configuration template from build-and-run (exact `configurationName`, absolute `projectPath`, timeouts: **600000** ms for heavy builds, **180000** ms or higher for long-lived servers such as `spring-boot:run`). Use **parallel** `Task` calls when several configs apply.
+   - If **no** app-style configurations exist or GeneralIDE errors, tell the user and only then offer a terminal fallback.
+
+Long-lived servers may hit `timedOut: true` while still starting; report that clearly. Parallel runs may contend on **ports** or IDE locks — note that if failures occur.
+
+## Parameters reference
+
+- **`open_file_in_editor`**: `filePath` (absolute or relative to project root), `projectPath`.
+- **`build_project`**: `projectPath`; optionally `filesToRebuild` for a faster partial build when only specific files changed.
+
+## When GeneralIDE / Index is unavailable
+
+Do not block finishing the user's task: complete the request, then note that they can sync, open, build, and run manually in IntelliJ.
