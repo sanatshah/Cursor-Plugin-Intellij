@@ -1,5 +1,5 @@
 {
-  "name": "intellij-plugins",
+  "name": "Intellij Integration",
   "owner": {
     "name": "Cursor Team",
     "email": "hi@cursor.com"
@@ -11,18 +11,18 @@
   },
   "plugins": [
     {
-      "name": "general",
+      "name": "General IDE Integration",
       "source": "general",
       "description": "General capabilities using the General MCP Server Intellij Plugin."
     },
     {
-      "name": "index",
+      "name": "Index",
       "source": "index",
       "description": "Index capabilities using the Index MCP Server Intellij Plugin."
     },
     {
-      "name": "debug",
-      "source": "debug",
+      "name": "Debugger",
+      "source": "debugger",
       "description": "Debug capabilities using the Debugger MCP Server Intellij Plugin."
     }
   ]

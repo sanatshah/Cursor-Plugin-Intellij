@@ -1,6 +1,6 @@
 {
-  "name": "debug",
-  "displayName": "Debug",
+  "name": "debugger",
+  "displayName": "Debugger",
   "version": "0.1.0",
   "description": "Debug capabilities using the Debugger MCP Server Intellij Plugin.",
   "author": {

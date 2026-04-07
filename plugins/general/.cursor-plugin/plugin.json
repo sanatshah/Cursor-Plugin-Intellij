@@ -1,6 +1,6 @@
 {
   "name": "general",
-  "displayName": "General",
+  "displayName": "General IDE Integration",
   "version": "0.1.0",
   "description": "General capabilities using the General MCP Server Intellij Plugin.",
   "author": {
