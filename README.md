@@ -108,35 +108,6 @@ Manage files, run commands, and interact with IntelliJ's broader features:
 
 ---
 
-## Validation
-
-Run the built-in validation script to ensure everything is configured correctly:
-
-```bash
-node scripts/validate-template.mjs
-```
-
-The validator checks:
-
-- `.cursor-plugin/marketplace.json` entries map to real plugin folders
-- Each plugin has a valid `.cursor-plugin/plugin.json`
-- Plugin names are unique, lowercase, and kebab-case
-- Required frontmatter metadata exists in plugin content files
-- Logo paths resolve correctly
-
----
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/my-feature`)
-3. Make your changes
-4. Run validation (`node scripts/validate-template.mjs`)
-5. Commit and push
-6. Open a Pull Request
-
----
-
 ## License
 
 This project is forked from the [Cursor Plugin Template](https://github.com/cursor/plugin-template). See the repository for license details.
