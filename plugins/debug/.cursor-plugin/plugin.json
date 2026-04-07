@@ -1,0 +1,13 @@
+{
+  "name": "debug",
+  "displayName": "Debug",
+  "version": "0.1.0",
+  "description": "Debug capabilities using the Debugger MCP Server Intellij Plugin.",
+  "author": {
+    "name": "Cursor Team",
+    "email": "hi@cursor.com"
+  },
+  "license": "MIT",
+  "keywords": ["cursor", "plugin", "debug", "debugger", "mcp", "intellij"],
+  "logo": "assets/testing.png"
+}

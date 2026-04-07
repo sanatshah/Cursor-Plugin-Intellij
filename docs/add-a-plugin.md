@@ -73,3 +73,4 @@ Fix all reported errors before committing.
 - Missing frontmatter keys (`name`, `description`) in skills, agents, or commands.
 - Rule files missing frontmatter `description`.
 - Broken relative paths for `logo`, `hooks`, or `mcpServers` in manifest files.
+

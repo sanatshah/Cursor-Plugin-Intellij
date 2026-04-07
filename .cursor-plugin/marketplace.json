@@ -1,49 +1,29 @@
 {
-  "name": "cursor-trial-plugins",
+  "name": "intellij-plugins",
   "owner": {
     "name": "Cursor Team",
     "email": "hi@cursor.com"
   },
   "metadata": {
-    "description": "A set of starter plugins for your Cursor trial.",
+    "description": "A set of plugins for development with Intellij IDE's.",
     "version": "0.1.0",
     "pluginRoot": "plugins"
   },
   "plugins": [
     {
-      "name": "git-workflows",
-      "source": "git-workflows",
-      "description": "Git workflows for commit, PR, CI, merge conflicts, and branch validation"
+      "name": "general",
+      "source": "general",
+      "description": "General capabilities using the General MCP Server Intellij Plugin."
     },
     {
-      "name": "documentation",
-      "source": "documentation",
-      "description": "Documentation workflows for README, weekly review, markdown naming, and doc writing"
+      "name": "index",
+      "source": "index",
+      "description": "Index capabilities using the Index MCP Server Intellij Plugin."
     },
     {
-      "name": "pm",
-      "source": "pm",
-      "description": "PM workflows with MCP integrations, ticket writing, and board summarization"
-    },
-    {
-      "name": "design",
-      "source": "design",
-      "description": "Design workflows for wireframes, component design, and mockup creation"
-    },
-    {
-      "name": "testing-reliability",
-      "source": "testing-reliability",
-      "description": "Testing and reliability workflows for Datadog, performance, and test automation"
-    },
-    {
-      "name": "planning",
-      "source": "planning",
-      "description": "Strategic planning workflows including devil's advocate analysis for decision making"
-    },
-    {
-      "name": "featureflag-migration",
-      "source": "featureflag-migration",
-      "description": "Migrate legacy feature flag systems to OpenFeature with inventory, migration, verification, cleanup, and scaffolding"
+      "name": "debug",
+      "source": "debug",
+      "description": "Debug capabilities using the Debugger MCP Server Intellij Plugin."
     }
   ]
 }

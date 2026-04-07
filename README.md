@@ -39,3 +39,4 @@ This checks marketplace paths, plugin manifests, and required frontmatter in rul
 - Required frontmatter metadata exists in plugin content files
 - Logo paths resolve correctly from each plugin manifest
 - `node scripts/validate-template.mjs` passes
+
